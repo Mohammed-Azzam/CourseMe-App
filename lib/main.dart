@@ -74,7 +74,7 @@ class MyShop extends StatelessWidget {
             // title: 'Flutter Demo',
             // theme: ThemeData(
             // ),
-            home:HomeScreen(),
+            home:CoursesScreen(),
             debugShowCheckedModeBanner: false,
           );
         },
