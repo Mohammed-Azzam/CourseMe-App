@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import '../../models/course_model.dart';
 import '../drawer/navigation_drawer.dart';
+import '../home/HomeCubit.dart';
 import 'my_courses_screen.dart';
 
 class CoursesScreen extends StatefulWidget {
@@ -25,6 +27,7 @@ class _CoursesScreenState extends State<CoursesScreen>
 
   @override
   Widget build(BuildContext context) {
+    var bloc = HomeCubit.get(context);
     double screenHeight = MediaQuery.of(context).size.height;
     double screenWidth = MediaQuery.of(context).size.width;
     return DefaultTabController(
@@ -89,14 +92,16 @@ class _CoursesScreenState extends State<CoursesScreen>
                   children: [
                     Container(
                       child: ListView.builder(
-                        itemBuilder: (context, index) => AllCoursesScreen(),
-                        itemCount: 6,
+                        scrollDirection: Axis.vertical,
+                        itemBuilder: (context, index) => AllCoursesScreen(
+                            bloc.CoursesAllList.elementAt(index)),
+                        itemCount: bloc.CoursesAllList.length,
                       ),
                     ),
                     Container(
                       child: ListView.builder(
                         itemBuilder: (context, index) => MyCoursesScreen(),
-                        itemCount: 6,
+                        itemCount: bloc.CoursesAllList.length,
                       ),
                     ),
                   ],
@@ -110,96 +115,96 @@ class _CoursesScreenState extends State<CoursesScreen>
   }
 }
 
-class AllCoursesScreen extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(left: 15,right: 15,top: 25),
-      child: Container(
-        decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(20),
-            boxShadow: [
-              BoxShadow(
-                  color: Colors.grey.withOpacity(0.6),
-                  blurRadius: 20,
-                  offset: Offset(
-                    5,
-                    5,
-                  )),
-            ]),
-        height: 120,
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              margin: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+Widget AllCoursesScreen([CourseModel? model]) {
+  return Padding(
+    padding: const EdgeInsets.only(left: 15, right: 15, top: 15),
+    child: Container(
+      decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(20),
+          boxShadow: [
+            BoxShadow(
+                color: Colors.grey.withOpacity(0.6),
+                blurRadius: 20,
+                offset: Offset(
+                  5,
+                  5,
+                )),
+          ]),
+      height: 84,
+      width: 345,
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: EdgeInsets.only(left: 7, right: 12, top: 7 ,bottom: 7),
+            child: Container(
+              height: 70,
+              width: 70,
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(20),
-                child: Image(
-                  image: AssetImage(
-                    "assets/images/computer.png",
-                  ),
+                child: Image.network(
+                  model!.image.toString(),
                   fit: BoxFit.cover,
-                  height: 100,
-                  width: 100,
                 ),
               ),
             ),
-            Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 10, vertical: 30),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "Business Management",
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontFamily: "Playfair Display",
-                        fontWeight: FontWeight.bold,
-                        fontSize: 12),
-                  ),
-                  Row(
-                    children: [
-                      Text(
-                        "By",
-                        style: TextStyle(
-                            color: Colors.grey,
-                            fontFamily: "Playfair Display",
-                            fontWeight: FontWeight.bold,
-                            fontSize: 12),
-                      ),
-                      Text(
-                        " Betty R. Roberts",
-                        style: TextStyle(
-                            color: Colors.black,
-                            fontFamily: "Playfair Display",
-                            fontWeight: FontWeight.bold,
-                            fontSize: 12),
-                      ),
-                      SizedBox(
-                        height: 25,
-                      ),
-                    ],
-                  ),
-                  Text(
-                    "14 Lessons",
-                    style: TextStyle(
-                        color: Color(0xFFC99200),
-                        fontFamily: "Playfair Display",
-                        fontWeight: FontWeight.bold,
-                        fontSize: 12),
-                  ),
-                ],
-              ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(right: 12, top: 15, bottom: 12),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  model.name.toString(),
+                  style: TextStyle(
+                      color: Colors.black,
+                      fontFamily: "Playfair Display",
+                      fontWeight: FontWeight.bold,
+                      fontSize: 12),
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 2,
+                ),
+                SizedBox(
+                  height: 2,
+                ),
+                Row(
+                  children: [
+                    Text(
+                      "By ",
+                      style: TextStyle(
+                          color: Colors.grey,
+                          fontFamily: "Playfair Display",
+                          fontWeight: FontWeight.bold,
+                          fontSize: 12),
+                    ),
+                    Text(
+                      model.teacher_By.toString(),
+                      style: TextStyle(
+                          color: Colors.black,
+                          fontFamily: "Playfair Display",
+                          fontWeight: FontWeight.bold,
+                          fontSize: 12),
+                    ),
+
+                  ],
+                ),
+                Text(
+                  '${model.numberOfLessons.toString()} Lessons',
+                  style: TextStyle(
+                      color: Color(0xFFC99200),
+                      fontFamily: "Playfair Display",
+                      fontWeight: FontWeight.bold,
+                      fontSize: 12),
+                ),
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
-    );
-  }
+    ),
+  );
 }
 // abstract class ThemeText {
 //    Color color1 =

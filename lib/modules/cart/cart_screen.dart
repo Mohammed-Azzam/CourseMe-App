@@ -103,7 +103,6 @@ class CartScreen extends StatelessWidget {
                                       shape: BoxShape.rectangle,
                                       color: Colors.white,
                                       borderRadius: BorderRadius.circular(20),
-
                                       boxShadow: [
                                         BoxShadow(
                                             color: Colors.grey.withOpacity(0.4),

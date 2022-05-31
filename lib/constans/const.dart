@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
+
+import '../models/course_model.dart';
 // import 'package:get_it/get_it.dart';
 
 void printFullText(String text) {
   final pattern = RegExp('.{1,800}');
   pattern.allMatches(text).forEach((match) => print(match.group(0)));
 }
-
+CourseModel? carusalModel;
 String? uId = '';
 String? uId2 = '';
 // final locator = GetIt.instance;

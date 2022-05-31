@@ -64,17 +64,18 @@ class MyShop extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(create: (context) => HomeCubit()),
+        BlocProvider(create: (context) => HomeCubit()..getCourses2()..getCourses3()..getCourses4()..getAllCourses()),
       ],
       child: BlocConsumer<HomeCubit, HomeStates>(
         listener: (context, state){},
         builder: (context, state)
         {
+          var bloc = HomeCubit.get(context);
           return MaterialApp(
             // title: 'Flutter Demo',
             // theme: ThemeData(
             // ),
-            home:CoursesScreen(),
+            home:CourseDetail(),
             debugShowCheckedModeBanner: false,
           );
         },

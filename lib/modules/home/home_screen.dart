@@ -13,6 +13,7 @@ import 'package:my_shop/modules/home/HomeStates.dart';
 import 'package:http/http.dart' as http;
 import '../../styles/color.dart';
 import '../courses/all_courses_screen.dart';
+import '../courses/course_screen.dart';
 import '../courses/my_courses_screen.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -21,35 +22,38 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-   CourseModel? carusalModel;
+  CourseModel? caruseModel;
 
-  getDataCourse() async {
-    CollectionReference courref = FirebaseFirestore.instance.collection('course');
-    QuerySnapshot querySnapshot = await courref.get();
+  // getDataCourse() async {
+  //   CollectionReference courref = FirebaseFirestore.instance.collection('course');
+  //   QuerySnapshot querySnapshot = await courref.get();
+  //
+  //   List<QueryDocumentSnapshot> listdocs = querySnapshot.docs;
+  //
+  //   listdocs.forEach((element) {
+  //     print(element.data());
+  //     print("=============================");
+  //
+  //   });
+  // }
 
-    List<QueryDocumentSnapshot> listdocs = querySnapshot.docs;
-
-    listdocs.forEach((element) {
-      print(element.data());
-      print("=============================");
-
-    });
-  }
-
-  @override
-  void initState() {
-    getDataCourse();
-    super.initState();
-  }
+  // @override
+  // void initState() {
+  //   HomeCubit.get(context).getCourses2();
+  //   super.initState();
+  // }
 
   @override
   Widget build(BuildContext context) {
+    double screenHeight = MediaQuery.of(context).size.height;
+    double screenWidth = MediaQuery.of(context).size.width;
+    CourseModel? model;
+    var bloc = HomeCubit.get(context);
     return Builder(
       builder: (context) {
         return BlocConsumer<HomeCubit, HomeStates>(
           listener: (context, state) {},
           builder: (context, state) {
-            CourseModel? courseModel;
             return Scaffold(
               appBar: AppBar(
                 shape: RoundedRectangleBorder(
@@ -97,7 +101,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Padding(
-                        padding: const EdgeInsets.only(left: 20, top: 20),
+                        padding: const EdgeInsets.only(
+                            left: 20, top: 20, bottom: 22),
                         child: Text(
                           "Checkout Our Demos",
                           style: TextStyle(
@@ -107,32 +112,88 @@ class _HomeScreenState extends State<HomeScreen> {
                               fontSize: 14),
                         ),
                       ),
-                      Container(
-                        child: CarouselSlider(
-                          items: [
-                            Stack(
-                              children:
-                              [
-                                Align(
-                                    alignment: Alignment.bottomCenter,
-                                     child:  Text('${courseModel?.category}')
+                      CarouselSlider(
+                        items: [
+                          Stack(
+                            children: [
+                              Container(
+                                child: Padding(
+                                    padding: const EdgeInsets.only(left: 15,right: 15),
+                                    child: Container(
+                                      height: 160,
+                                      width: 300,
+                                      // decoration: BoxDecoration(
+                                      //   color: Colors.red,
+                                      //   borderRadius: BorderRadius.circular(50),
+                                      // ),
+                                      child: Image.network(
+                                        bloc.CoursesList.first.image,
+                                        fit: BoxFit.fill,
+                                        color: Colors.white.withOpacity(0.8),
+                                        colorBlendMode: BlendMode.modulate,
+                                      ),
+                                    ),
+                                  ),
+                              ),
+
+                              // Align(
+                              //     alignment: Alignment.bottomCenter,
+                              //     child: Container(
+                              //       height: 25,
+                              //       width: 220,
+                              //       decoration: BoxDecoration(
+                              //         shape: BoxShape.rectangle,
+                              //         color: Colors.white.withOpacity(0.7),
+                              //         borderRadius: BorderRadius.circular(15),
+                              //       ),
+                              //       child: Padding(
+                              //         padding: const EdgeInsets.all(5.0),
+                              //         child: Column(
+                              //           children: [
+                              //             Text(
+                              //               bloc.CoursesList.first.name
+                              //                   .toString(),
+                              //               style: TextStyle(
+                              //                 fontSize: 13,
+                              //                 color: Colors.black,
+                              //                 fontWeight: FontWeight.bold,
+                              //               ),
+                              //               maxLines: 1,
+                              //             ),
+                              //           ],
+                              //         ),
+                              //       ),
+                              //     )),
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                  left: 30,
+                                  top: 120,
                                 ),
-                                ClipRRect(
-                                  child: Image.network(
-                                    '${courseModel?.image}',fit: BoxFit.cover,
+                                child: Container(
+                                  color: Colors.black.withOpacity(0.5),
+                                  child: Text(
+                                    bloc.CoursesList.first.name
+                                        .toString(),
+                                    style: TextStyle(
+                                      fontSize: 15,
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                     maxLines: 2,
                                   ),
                                 ),
-                              ],
-                            )
-                          ].toList(),
-                          options: CarouselOptions(
-                              height: 200,
-                              initialPage: 0,
-                              enableInfiniteScroll: true,
-                              reverse: false,
-                              scrollDirection: Axis.horizontal,
-                              viewportFraction: .8),
-                        ),
+                              ),
+                              // SizedBox(height: 35,),
+                            ],
+                          )
+                        ].toList(),
+                        options: CarouselOptions(
+                            height: 200,
+                            initialPage: 0,
+                            enableInfiniteScroll: true,
+                            reverse: false,
+                            scrollDirection: Axis.horizontal,
+                            viewportFraction: 0.8),
                       ),
                       Padding(
                         padding: const EdgeInsets.only(
@@ -173,12 +234,12 @@ class _HomeScreenState extends State<HomeScreen> {
                         height: 20,
                       ),
                       Container(
-                        height: 150.0,
-                        child: ListView.builder(
-                            scrollDirection: Axis.horizontal,
-                            itemBuilder: (context, index) => buildFreeCourses(),
-                            itemCount: 3),
-                      ),
+                          height: 150.0,
+                          child: ListView.builder(
+                              scrollDirection: Axis.horizontal,
+                              itemBuilder: (context, index) => buildFreeCourses(
+                                  bloc.CoursesList2.elementAt(index.bitLength)),
+                              itemCount: bloc.CoursesList2.length)),
                       SizedBox(
                         height: 30,
                       ),
@@ -223,8 +284,9 @@ class _HomeScreenState extends State<HomeScreen> {
                             borderRadius: BorderRadius.circular(25)),
                         child: ListView.builder(
                             scrollDirection: Axis.horizontal,
-                            itemBuilder: (context, index) => buildPaidCourses(),
-                            itemCount: 3),
+                            itemBuilder: (context, index) => buildPaidCourses(
+                                bloc.CoursesList3.elementAt(index.bitLength)),
+                            itemCount: bloc.CoursesList3.length),
                       ),
                     ]),
               ),
@@ -237,32 +299,51 @@ class _HomeScreenState extends State<HomeScreen> {
 }
 
 @override
-Widget buildFreeCourses() => Stack(
+Widget buildFreeCourses(CourseModel model) => Stack(
       children: [
         Padding(
           padding: const EdgeInsets.only(left: 20),
           child: Container(
-            height: 150,
-            decoration: BoxDecoration(
-              boxShadow: [BoxShadow(color: Colors.white, spreadRadius: 10)],
-              borderRadius: BorderRadius.circular(15),
-            ),
+            height: 140,
+            width: 131,
+            // decoration: BoxDecoration(
+            //   boxShadow: [BoxShadow(color: Colors.white, spreadRadius: 10)],
+            //   borderRadius: BorderRadius.circular(15),
+            // ),
             child: Stack(
               children: [
-                Image.asset(
-                  'assets/images/pincle.png',
-                  fit: BoxFit.cover,
-                ),
-                Positioned(
-                  top: 90,
-                  left: 30,
-                  child: Text(
-                    "Social Media\nMarketing",
-                    style: TextStyle(
-                        color: Color(0xFFC99200),
-                        fontFamily: "Playfair Display",
-                        fontWeight: FontWeight.bold,
-                        fontSize: 14),
+                   Container(
+                     child: Image.network(
+                      model.image.toString(),
+                       fit: BoxFit.fill,
+                  ),
+                   ),
+
+                // Image.asset(
+                //   'assets/images/pincle.png',
+                //   fit: BoxFit.cover,
+                // ),
+                Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Container(
+                    height: 70,
+                    width: 131,
+                    color: Colors.white,
+                    child: Center(
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 17,left: 20,bottom: 13),
+                        child: Text(
+                          model.name.toString(),
+                          style: TextStyle(
+                              color: Color(0xFFC99200),
+                              fontFamily: "Playfair Display",
+                              fontWeight: FontWeight.bold,
+                              fontSize: 12),
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 2,
+                        ),
+                      ),
+                    ),
                   ),
                 ),
               ],
@@ -272,32 +353,46 @@ Widget buildFreeCourses() => Stack(
       ],
     );
 
-Widget buildPaidCourses() => Stack(
+Widget buildPaidCourses(CourseModel model) => Stack(
       children: [
         Padding(
           padding: const EdgeInsets.only(left: 20),
           child: Container(
-            height: 150,
+            height: 140,
+            width: 131,
             decoration: BoxDecoration(
               boxShadow: [BoxShadow(color: Colors.white, spreadRadius: 5)],
-              borderRadius: BorderRadius.circular(15),
+              borderRadius: BorderRadius.circular(20),
             ),
             child: Stack(
               children: [
-                Image.asset(
-                  'assets/images/computer.png',
-                  fit: BoxFit.cover,
+                Container(
+                  child: Image.network(
+                    model.image.toString(),
+                    fit: BoxFit.fill,
+                  ),
                 ),
-                Positioned(
-                  top: 90,
-                  left: 30,
-                  child: Text(
-                    "Arts and\nHumanities",
-                    style: TextStyle(
-                        color: Color(0xFFC99200),
-                        fontFamily: "Playfair Display",
-                        fontWeight: FontWeight.bold,
-                        fontSize: 14),
+                Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Container(
+                    height: 70,
+                    width: 131,
+                    color: Colors.white,
+                    child: Center(
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 17,left: 20,bottom: 13),
+                        child: Text(
+                          model.name.toString(),
+                          style: TextStyle(
+                              color: Color(0xFFC99200),
+                              fontFamily: "Playfair Display",
+                              fontWeight: FontWeight.bold,
+                              fontSize: 12),
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 2,
+                        ),
+                      ),
+                    ),
                   ),
                 ),
               ],
